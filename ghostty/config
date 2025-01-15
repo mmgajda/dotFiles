@@ -1,0 +1,4 @@
+command = /usr/bin/zsh
+background-opacity = 0.8
+
+theme = catppuccin-frappe
