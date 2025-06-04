@@ -356,6 +356,45 @@ require("lazy").setup({
 	},
 	{ "Bilal2453/luvit-meta", lazy = true },
 	{
+  		"mfussenegger/nvim-dap",
+  		dependencies = {
+    			"rcarriga/nvim-dap-ui",
+    			"nvim-neotest/nvim-nio",
+   			"williamboman/mason.nvim",
+    			"jay-babu/mason-nvim-dap.nvim",
+  	},
+  	config = function()
+	    require("dapui").setup()
+	    require("mason-nvim-dap").setup({
+	      ensure_installed = { "codelldb", "debugpy", "delve", "java-debug-adapter" }
+	})
+
+    local dap = require("dap")
+    local dapui = require("dapui")
+
+    dap.listeners.before.attach.dapui_config = function()
+      dapui.open()
+    end
+    dap.listeners.before.launch.dapui_config = function()
+      dapui.open()
+    end
+    dap.listeners.before.event_terminated.dapui_config = function()
+      dapui.close()
+    end
+    dap.listeners.before.event_exited.dapui_config = function()
+      dapui.close()
+    end
+  end
+}
+{
+  "Civitasv/cmake-tools.nvim",
+  config = function()
+    require("cmake-tools").setup({})
+  end,
+  ft = { "c", "cpp" },
+}
+
+	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -524,10 +563,11 @@ require("lazy").setup({
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
-				-- clangd = {},
-				-- gopls = {},
-				-- pyright = {},
-				-- rust_analyzer = {},
+				clangd = {},
+				gopls = {},
+				pyright = {},
+				rust_analyzer = {},
+				jdtls = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 				--
 				-- Some languages (like typescript) have entire language plugins that can be useful:
@@ -568,6 +608,10 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
+				"codelldb",         -- For C/Rust debugging
+  				"debugpy",          -- Python
+  				"delve",            -- Go
+  				"java-debug-adapter", -- Java
 			})
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -826,6 +870,11 @@ require("lazy").setup({
 			ensure_installed = {
 				"bash",
 				"c",
+				"cpp",
+				"python",
+				"rust",
+				"go",
+				"java",
 				"diff",
 				"html",
 				"lua",
