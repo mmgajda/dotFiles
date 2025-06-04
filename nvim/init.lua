@@ -392,7 +392,7 @@ require("lazy").setup({
     require("cmake-tools").setup({})
   end,
   ft = { "c", "cpp" },
-}
+},
 
 	{
 		-- Main LSP Configuration
