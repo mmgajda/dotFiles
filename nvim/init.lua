@@ -385,7 +385,7 @@ require("lazy").setup({
       dapui.close()
     end
   end
-}
+},
 {
   "Civitasv/cmake-tools.nvim",
   config = function()
@@ -640,7 +640,7 @@ require("lazy").setup({
 				function()
 					require("conform").format({ async = true, lsp_format = "fallback" })
 				end,
-				mode = "",
+				mode = "n",
 				desc = "[F]ormat buffer",
 			},
 		},
