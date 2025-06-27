@@ -2,7 +2,7 @@
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = "a"
@@ -127,6 +127,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
+	{ import = "plugins" },
 	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 	"wakatime/vim-wakatime",
@@ -356,45 +357,6 @@ require("lazy").setup({
 	},
 	{ "Bilal2453/luvit-meta", lazy = true },
 	{
-  		"mfussenegger/nvim-dap",
-  		dependencies = {
-    			"rcarriga/nvim-dap-ui",
-    			"nvim-neotest/nvim-nio",
-   			"williamboman/mason.nvim",
-    			"jay-babu/mason-nvim-dap.nvim",
-  	},
-  	config = function()
-	    require("dapui").setup()
-	    require("mason-nvim-dap").setup({
-	      ensure_installed = { "codelldb", "debugpy", "delve", "java-debug-adapter" }
-	})
-
-    local dap = require("dap")
-    local dapui = require("dapui")
-
-    dap.listeners.before.attach.dapui_config = function()
-      dapui.open()
-    end
-    dap.listeners.before.launch.dapui_config = function()
-      dapui.open()
-    end
-    dap.listeners.before.event_terminated.dapui_config = function()
-      dapui.close()
-    end
-    dap.listeners.before.event_exited.dapui_config = function()
-      dapui.close()
-    end
-  end
-},
-{
-  "Civitasv/cmake-tools.nvim",
-  config = function()
-    require("cmake-tools").setup({})
-  end,
-  ft = { "c", "cpp" },
-},
-
-	{
 		-- Main LSP Configuration
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -563,11 +525,13 @@ require("lazy").setup({
 			--  - settings (table): Override the default settings passed when initializing the server.
 			--        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
 			local servers = {
+				jdtls = {
+					cmd = { "jdtls" },
+				},
 				clangd = {},
-				gopls = {},
+				-- gopls = {},
 				pyright = {},
 				rust_analyzer = {},
-				jdtls = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 				--
 				-- Some languages (like typescript) have entire language plugins that can be useful:
@@ -608,12 +572,18 @@ require("lazy").setup({
 			local ensure_installed = vim.tbl_keys(servers or {})
 			vim.list_extend(ensure_installed, {
 				"stylua", -- Used to format Lua code
-				"codelldb",         -- For C/Rust debugging
-  				"debugpy",          -- Python
-  				"delve",            -- Go
-  				"java-debug-adapter", -- Java
 			})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+			require("mason-tool-installer").setup({
+				ensure_installed = {
+					"lua_ls",
+					"stylua",
+					"pyright",
+					"clangd",
+					"black",
+					"isort",
+					"clang-format",
+				},
+			})
 
 			require("mason-lspconfig").setup({
 				handlers = {
@@ -640,7 +610,7 @@ require("lazy").setup({
 				function()
 					require("conform").format({ async = true, lsp_format = "fallback" })
 				end,
-				mode = "n",
+				mode = "",
 				desc = "[F]ormat buffer",
 			},
 		},
@@ -665,8 +635,10 @@ require("lazy").setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
 				-- Conform can also run multiple formatters sequentially
-				-- python = { "isort", "black" },
-				--
+				python = { "isort", "black" },
+				c = { "clang_format" },
+				cpp = { "clang_format" },
+				java = {},
 				-- You can use 'stop_after_first' to run the first available formatter from the list
 				-- javascript = { "prettierd", "prettier", stop_after_first = true },
 			},
@@ -870,11 +842,6 @@ require("lazy").setup({
 			ensure_installed = {
 				"bash",
 				"c",
-				"cpp",
-				"python",
-				"rust",
-				"go",
-				"java",
 				"diff",
 				"html",
 				"lua",
@@ -913,9 +880,10 @@ require("lazy").setup({
 	--  Here are some example plugins that I've included in the Kickstart repository.
 	--  Uncomment any of the lines below to enable them (you will need to restart nvim).
 	--
-	-- require 'kickstart.plugins.debug',
-	-- require 'kickstart.plugins.indent_line',
-	-- require 'kickstart.plugins.lint',
+	require("plugins.debug"),
+	require("plugins.indent_line"),
+	require("plugins.lint"),
+	--require("plugins.jdtls"),
 	-- require 'kickstart.plugins.autopairs',
 	-- require 'kickstart.plugins.neo-tree',
 	-- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
