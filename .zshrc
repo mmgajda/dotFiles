@@ -15,10 +15,10 @@ ZSH_THEME=""
 # a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-#
+# 
 # Syntax highlighting and autocompletions
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Uncomment the following line to use case-sensitive completion.
  CASE_SENSITIVE="true"
@@ -98,7 +98,7 @@ eval "$(zoxide init zsh)"
 # if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
-#   export EDITOR=‘nvim'
+#   export EDITOR='mvim'
 # fi
 
 # Compilation flags
@@ -112,6 +112,13 @@ eval "$(zoxide init zsh)"
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias list='ls -lah'
-alias discord='~/Downloads/Discord/Discord'
+alias python="python3.12"
+alias python3.11="python3.11"
+# Add Python 3.11 binaries to PATH
+export PATH="/Users/machoman/Library/Python/3.11/bin:$PATH"
+
+
+# Created by `pipx` on 2024-09-14 19:51:28
+export PATH="$PATH:/Users/machoman/.local/bin"
+
 eval "$(starship init zsh)"
